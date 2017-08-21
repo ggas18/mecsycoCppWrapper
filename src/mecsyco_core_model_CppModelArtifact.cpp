@@ -133,7 +133,7 @@ Java_mecsyco_core_model_CppModelArtifact_n_1processExternalInputEvent(
                                                // la valeur du pointeur
 
   JModelArtifact *obj = reinterpret_cast<JModelArtifact *>(pointer);
-  static const char *chars1, *chars2;
+  const char *chars1, *chars2;
   chars1 = env->GetStringUTFChars(jstringForSimulData, NULL);
   string NstringForSimulData(chars1);
 

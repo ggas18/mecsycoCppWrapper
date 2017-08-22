@@ -18,12 +18,14 @@ void ModelArtifactLorenzZ::initialize() {
   this->Y = 1.0;
   this->Z = 4.0;
   this->time = 0.0;
-  this->dt = 0.001;
+  this->dt = 0.01;
   this->c = 2.67;
   return;
 }
 
-void ModelArtifactLorenzZ::processInternalEvent(double aTime) { time = aTime; }
+void ModelArtifactLorenzZ::processInternalEvent(double aTime) {
+  this->time = aTime;
+}
 double ModelArtifactLorenzZ::getNextInternalEventTime() {
   return this->time + this->dt;
 }

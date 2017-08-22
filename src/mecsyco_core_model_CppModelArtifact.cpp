@@ -172,6 +172,7 @@ Java_mecsyco_core_model_CppModelArtifact_n_1getExternalOutputEvent(
                                                // la valeur du pointeur
 
   JModelArtifact *obj = reinterpret_cast<JModelArtifact *>(pointer);
+  std::cout << " test" << std::endl;
   const char *chars1;
   chars1 = env->GetStringUTFChars(jStr, NULL);
   string Nport(chars1);

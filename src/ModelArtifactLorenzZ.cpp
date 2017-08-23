@@ -26,9 +26,13 @@ void ModelArtifactLorenzZ::initialize() {
 }
 
 void ModelArtifactLorenzZ::processInternalEvent(double aTime) {
+  // this->time = this->time + this->dt;
+  // std::cout << "Temps :" << aTime << std::endl;
   this->time = aTime;
+  this->Z = this->Z + this->dt * (this->X * this->Y - this->c * this->Z);
 }
 double ModelArtifactLorenzZ::getNextInternalEventTime() {
+  // std::cout << "Temps :" << (time + dt) << std::endl;
   return this->time + this->dt;
 }
 double ModelArtifactLorenzZ::getLastEventTime() {
@@ -47,7 +51,6 @@ void ModelArtifactLorenzZ::processExternalInputEvent(
   } else {
     this->Y = tuple1->getItem1();
   }
-  this->Z = this->Z + this->dt * (this->X * this->Y - this->c * this->Z);
 
   return;
 }

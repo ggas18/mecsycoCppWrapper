@@ -4,11 +4,13 @@
 
 #include <stdexcept> // pour les exceptions notamment dans la receptions des pas de temps
 
-#include "Tuple1.h" // pour les Tuple1
+#include "Tuple1.h" // pour les Tuple1s
+#include "Tuple2.h" // pour les Tuple2s
+#include "Tuple3.h" // pour les Tuple3s
 
 #include "SimulEvent.h" // pour les SimulEvent
 
-//#include <iostream> // pour les affichage à l'écran
+#include <boost/algorithm/string/predicate.hpp> // pour la comparaison des chaînes de caractères.
 
 ModelArtifactLorenzZ::ModelArtifactLorenzZ() {}
 
@@ -52,8 +54,25 @@ void ModelArtifactLorenzZ::processExternalInputEvent(
 
 mecsyco::SimulEventPtr
 ModelArtifactLorenzZ::getExternalOutputEvent(string port) {
+  string obs("obs");
+  string obs2d("obs2D");
+  string obs3d("obs3d");
 
-  mecsyco::SimulDataPtr data(new mecsyco::Tuple1<double>(this->Z));
+  mecsyco::SimulDataPtr data;
+  if (boost::iequals(obs, port)) {
+    data = mecsyco::SimulDataPtr(
+        new mecsyco::Tuple2<double, double>(this->X, this->Y));
+  } else if (boost::iequals(obs2d, port)) {
+    data = mecsyco::SimulDataPtr(
+        new mecsyco::Tuple2<double, double>(this->X, this->Y));
+  } else if (boost::iequals(obs3d, port)) {
+    data = mecsyco::SimulDataPtr(
+        new mecsyco::Tuple3<double, double, double>(this->X, this->Y, this->Z));
+  } else { // on fait un transfert comme dans la version centrée sur la
+           // communication
+    data = mecsyco::SimulDataPtr(new mecsyco::Tuple1<double>(this->Z));
+  }
+
   mecsyco::SimulEventPtr event(new mecsyco::SimulEvent(data, this->time));
   return event;
 }

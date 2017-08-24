@@ -1,4 +1,4 @@
-#include "ModelArtifactLorenzZ.h"
+#include "ModelArtifactLorenzCoord.h"
 
 #include <memory> // pour les smart_ponter
 
@@ -12,51 +12,63 @@
 
 #include <boost/algorithm/string/predicate.hpp> // pour la comparaison des chaînes de caractères.
 
-ModelArtifactLorenzZ::ModelArtifactLorenzZ() {}
+ModelArtifactLorenzCoord::ModelArtifactLorenzCoord() {
+  this->X = 1.0;
+  this->Y = 1.0;
+  this->Z = 4.0;
+  this->time = 0.0;
+  this->dt = 0.01;
+  this->b = 28;
+}
 
-void ModelArtifactLorenzZ::initialize() {
+void ModelArtifactLorenzCoord::initialize() {
 
   this->X = 1.0;
   this->Y = 1.0;
   this->Z = 4.0;
   this->time = 0.0;
   this->dt = 0.01;
-  this->c = 2.67;
+  this->b = 28;
   return;
 }
 
-void ModelArtifactLorenzZ::processInternalEvent(double aTime) {
+void ModelArtifactLorenzCoord::processInternalEvent(double aTime) {
   // this->time = this->time + this->dt;
   // std::cout << "Temps :" << aTime << std::endl;
   this->time = aTime;
-  this->Z = this->Z + this->dt * (this->X * this->Y - this->c * this->Z);
+  double dY = (this->b * this->X - this->Y - this->X * this->Z);
+
+  this->Y = this->Y + this->dt * dY;
+  std::cout << "Y value " << this->Y << std::endl;
 }
-double ModelArtifactLorenzZ::getNextInternalEventTime() {
+double ModelArtifactLorenzCoord::getNextInternalEventTime() {
   // std::cout << "Temps :" << (time + dt) << std::endl;
   return this->time + this->dt;
 }
-double ModelArtifactLorenzZ::getLastEventTime() {
+double ModelArtifactLorenzCoord::getLastEventTime() {
   return this->time - this->dt;
 }
-void ModelArtifactLorenzZ::processExternalInputEvent(
+void ModelArtifactLorenzCoord::processExternalInputEvent(
     mecsyco::SimulEventPtr event, string port) {
 
   std::shared_ptr<mecsyco::Tuple1<double>> tuple1;
 
   tuple1 = std::dynamic_pointer_cast<mecsyco::Tuple1<double>>(event->getData());
-
-  if (port == "X") {
+  string portX("X");
+  if (boost::iequals(port, portX)) {
     this->X = tuple1->getItem1();
+    std::cout << "X value " << tuple1->getItem1() << std::endl;
 
   } else {
-    this->Y = tuple1->getItem1();
+    this->Z = tuple1->getItem1();
+    std::cout << "Z value " << tuple1->getItem1() << std::endl;
   }
 
   return;
 }
 
 mecsyco::SimulEventPtr
-ModelArtifactLorenzZ::getExternalOutputEvent(string port) {
+ModelArtifactLorenzCoord::getExternalOutputEvent(string port) {
   string obs("obs");
   string obs2d("obs2D");
   string obs3d("obs3d");
@@ -73,21 +85,21 @@ ModelArtifactLorenzZ::getExternalOutputEvent(string port) {
         new mecsyco::Tuple3<double, double, double>(this->X, this->Y, this->Z));
   } else { // on fait un transfert comme dans la version centrée sur la
            // communication
-    data = mecsyco::SimulDataPtr(new mecsyco::Tuple1<double>(this->Z));
+    data = mecsyco::SimulDataPtr(new mecsyco::Tuple1<double>(this->X));
   }
 
   mecsyco::SimulEventPtr event(new mecsyco::SimulEvent(data, this->time));
   return event;
 }
 
-void ModelArtifactLorenzZ::finishSimulation() {
+void ModelArtifactLorenzCoord::finishSimulation() {
 
   std::cout << "FINISHED: " << std::endl;
   std::cout << "Time: " << this->time << std::endl;
   return;
 }
 
-void ModelArtifactLorenzZ::setInitialParameters(char **args) {
+void ModelArtifactLorenzCoord::setInitialParameters(char **args) {
   try {
     this->dt =
         std::stod(args[0]); // on convertit en double si c'est bien un real

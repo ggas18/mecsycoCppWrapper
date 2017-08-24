@@ -1,12 +1,12 @@
 #include "JModelArtifact.h"
 #include <jni.h> // pour la communication avec Java
 
-#include "ModelArtifactLorenzZ.h"
+#include "ModelArtifactLorenzCoord.h"
 JModelArtifact::JModelArtifact(JNIEnv *env, jobject jObject) {
 
   this->jObject = env->NewGlobalRef(jObject);
   this->env = env;
-  this->modelArtifact = new ModelArtifactLorenzZ();
+  this->modelArtifact = new ModelArtifactLorenzCoord();
 }
 
 char **JModelArtifact::jStringArray2CharChar(JNIEnv *env,

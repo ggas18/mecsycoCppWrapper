@@ -39,15 +39,13 @@ void ModelArtifactLorenzCoord::processInternalEvent(double aTime) {
   double dY = (this->b * this->X - this->Y - this->X * this->Z);
 
   this->Y = this->Y + this->dt * dY;
-  std::cout << "Y value " << this->Y << std::endl;
+  // std::cout << "Y value " << this->Y << std::endl;
 }
 double ModelArtifactLorenzCoord::getNextInternalEventTime() {
   // std::cout << "Temps :" << (time + dt) << std::endl;
   return this->time + this->dt;
 }
-double ModelArtifactLorenzCoord::getLastEventTime() {
-  return this->time - this->dt;
-}
+double ModelArtifactLorenzCoord::getLastEventTime() { return this->time; }
 void ModelArtifactLorenzCoord::processExternalInputEvent(
     mecsyco::SimulEventPtr event, string port) {
 
@@ -57,11 +55,11 @@ void ModelArtifactLorenzCoord::processExternalInputEvent(
   string portX("X");
   if (boost::iequals(port, portX)) {
     this->X = tuple1->getItem1();
-    std::cout << "X value " << tuple1->getItem1() << std::endl;
+    // std::cout << "X value " << tuple1->getItem1() << std::endl;
 
   } else {
     this->Z = tuple1->getItem1();
-    std::cout << "Z value " << tuple1->getItem1() << std::endl;
+    // std::cout << "Z value " << tuple1->getItem1() << std::endl;
   }
 
   return;
@@ -85,7 +83,7 @@ ModelArtifactLorenzCoord::getExternalOutputEvent(string port) {
         new mecsyco::Tuple3<double, double, double>(this->X, this->Y, this->Z));
   } else { // on fait un transfert comme dans la version centrée sur la
            // communication
-    data = mecsyco::SimulDataPtr(new mecsyco::Tuple1<double>(this->X));
+    data = mecsyco::SimulDataPtr(new mecsyco::Tuple1<double>(this->Y));
   }
 
   mecsyco::SimulEventPtr event(new mecsyco::SimulEvent(data, this->time));

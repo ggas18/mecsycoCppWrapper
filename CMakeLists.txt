@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5.1)
 
-project (lorenzZcpp )
+project (mecsycoWrapper )
 
 set(PROJECT_VERSION "1.0.0")
 
@@ -21,6 +21,6 @@ set (Boost_USE_STATIC_LIBS OFF) # pour lier boost de façon dynamique
 find_package (Boost COMPONENTS REQUIRED system thread)
 
 
-add_library(lorenzZcpp SHARED ${SOURCES})
+add_library(lorenzYcpp SHARED ${SOURCES})
 
-target_link_libraries (lorenzZcpp ${Boost_LIBRARIES})
+target_link_libraries (lorenzYcpp ${Boost_LIBRARIES})
